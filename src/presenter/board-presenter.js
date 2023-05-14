@@ -1,29 +1,32 @@
-import SortView from '../view/sort-view.js';
 import NewFormView from '../view/creation-form-view.js';
 import EditFormView from '../view/edit-form-view.js';
-import FilterView from '../view/filter-view.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import {render} from '../render.js';
+import SortView from '../view/sort-view.js';
+import TripEventsView from '../view/trip-events-view.js';
 
-
-const WAYPOINTS_COUNT = 3;
 
 export default class BoardPresenter {
-  boardComponent = new WaypointListView();
+  tripEventsView = new TripEventsView();
+  tripEventsListView = new TripEventsListView();
 
-  constructor({boardContainer}) {
-    this.boardContainer = boardContainer;
+  constructor({container, pointsModel}) {
+    this.container = container;
+    this.pointsModel = pointsModel;
   }
 
   init() {
-    render(new EditFormView(), this.boardComponent.getElement(), 'afterbegin');
-    render(new FilterView(), this.boardComponent.getElement());
-    render(new SortView(), this.boardComponent.getElement());
-    render(this.boardComponent, this.boardContainer);
+    this.pointsModels = this.pointsModel.points;
+    this.pointsDestinations = this.pointsModel.tripDestinations;
+    this.pointOffersByTypes = this.pointsModel.offersByType;
 
+    this.pointsModels.forEach((points) => {
+      render(new TripEventsItemView({ point: points, tripDestinations: this.pointsDestinations, mockOffers: this.pointOffersByTypes}), this.tripEventsListView.getElement());
+    });
 
-    for (let i = 0; i < WAYPOINTS_COUNT; i++) {
-      render(new NewFormView(), this.boardComponent.getElement(), 'afterbegin');
-    }
+    render(new SortView(), this.tripEventsView.getElement());
+    render(new EditFormView({point: this.pointsModels[0], tripDestinations: this.pointsDestinations, mockOffers: this.pointOffersByTypes}), this.tripEventsListView.getElement(), RenderPosition.AFTERBEGIN);
+    render(this.tripEventsListView, this.tripEventsView.getElement());
+    render(this.tripEventsView, this.container);
   }
 }
