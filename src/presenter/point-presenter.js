@@ -50,13 +50,12 @@ export default class PointPresenter {
       return;
     }
 
-    switch (this.#mode) {
-      case Mode.PREVIEW:
-        replace(this.#previewPointComponent, prevPreviewPointComponent);
-        break;
-      case Mode.EDITING:
-        replace(this.#editingPointComponent, prevEditingPointComponent);
-        break;
+    if (this.#mode === Mode.PREVIEW) {
+      replace(this.#previewPointComponent, prevPreviewPointComponent);
+    }
+
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#editingPointComponent, prevEditingPointComponent);
     }
 
     remove(prevPreviewPointComponent);
@@ -70,7 +69,6 @@ export default class PointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.PREVIEW) {
-      this.#editingPointComponent.reset(this.#point);
       this.#replaceEditingPointToPreviewPoint();
     }
   };
@@ -91,7 +89,6 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#editingPointComponent.reset(this.#point);
       this.#replaceEditingPointToPreviewPoint();
     }
   };
@@ -105,7 +102,6 @@ export default class PointPresenter {
   };
 
   #handlePreviewClick = () => {
-    this.#editingPointComponent.reset(this.#point);
     this.#replaceEditingPointToPreviewPoint();
   };
 
