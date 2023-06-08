@@ -1,28 +1,46 @@
 import dayjs from 'dayjs';
 
-function humanizeDate(eventDate, dateFormat) {
-  return eventDate ? dayjs(eventDate).format(dateFormat) : '';
-}
+const HOUR_MINUTES_COUNT = 60;
+const TOTAL_DAY_MINUTES_COUNT = 1440;
+const DATE_FORMAT = 'YYYY-MM-DD';
+const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
+const TIME_FORMAT = 'hh:mm';
 
+const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
 
-function getRandomArrayItem (items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
+const duration = (dateFrom, dateTo) => {
+  const start = dayjs(dateFrom);
+  const end = dayjs(dateTo);
+  const difference = end.diff(start, 'minute');
 
-function getRandomNumber(a, b) {
+  const days = Math.floor(difference / TOTAL_DAY_MINUTES_COUNT);
+  const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT) / HOUR_MINUTES_COUNT);
+  const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
 
-  if (a < 0 || b < 0) {
-    return NaN;
-  }
+  const daysOutput = (days) ? `${days}D` : '';
+  const hoursOutput = (restHours) ? `${restHours}H` : '';
+  const minutesOutput = (restMinutes) ? `${restMinutes}M` : '';
+
+  return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
+};
+
+const getDate = (date) => dayjs(date).format(DATE_FORMAT);
+
+const getTime = (date) => dayjs(date).format(TIME_FORMAT);
+
+const getDateTime = (date) => dayjs(date).format(DATE_TIME_FORMAT);
+
+const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
 
-  return Math.floor(result);
-}
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
 
-function capitalize(text) {
-  return text.charAt(0).toUpperCase().concat(text.slice(1));
-}
+const getRandomElement = (elements) => {
+  const MIN = 0;
+  const max = elements.length - 1;
+  return elements[getRandomInteger(MIN, max)];
+};
 
-export {getRandomArrayItem, getRandomNumber, humanizeDate, capitalize};
+export { getRandomInteger, getRandomElement, humanizePointDueDate, duration, getDate, getDateTime, getTime };
