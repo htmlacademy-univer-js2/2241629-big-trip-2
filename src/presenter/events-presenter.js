@@ -2,6 +2,7 @@ import PointsView from '../view/points-view.js';
 import PreviewPointView from '../view/preview-point-view.js';
 import EditingFormView from '../view/editing-form-view.js';
 import SortingView from '../view/sorting-view.js';
+import NoPointView from '../view/no-point-view.js';
 import { render } from '../render.js';
 
 export default class EventsPresenter {
@@ -23,11 +24,15 @@ export default class EventsPresenter {
     this.#destinations = [...this.#pointsModel.destinations];
     this.#offers = [...this.#pointsModel.offers];
 
-    render(new SortingView(), this.#tripContainer);
-    render(this.#pointsList, this.#tripContainer);
-
-    for (const point of this.#boardPoints){
-      this.#renderPoint(point);
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(), this.#tripContainer);
+    }
+    else {
+      render(new SortingView(), this.#tripContainer);
+      render(this.#pointsList, this.#tripContainer);
+      for (const point of this.#boardPoints){
+        this.#renderPoint(point);
+      }
     }
   }
 
