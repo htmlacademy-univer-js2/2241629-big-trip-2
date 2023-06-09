@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePointDueDate } from '../utils/point.js';
+import {humanizePointDueDate } from '../utils/common.js';
 
 const renderRouteTrip = (points, destinations) => {
   if (points.length === 0) {
@@ -61,6 +61,7 @@ const createTripInfoTemplate = (points, destinations, offers) => {
   }
   return  `<div class="trip-info"><div class="trip-info__main">
   <h1 class="trip-info__title">${renderRouteTrip(points, destinations)}</h1>
+
   <p class="trip-info__dates">${renderDatesTrip(points)}</p>
 </div>
 <p class="trip-info__cost">
